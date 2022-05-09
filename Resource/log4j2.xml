@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="warn">
+	<Properties>
+		<Property name="basePath">logFolder</Property>
+	</Properties>
+
+	<Appenders>
+		<RollingFile name="fileLogger"
+			fileName="${basePath}/Demo_logs.log"
+			filePattern="${basePath}/Demo_logs-%d{yyyy-MM-dd}-%i.log">
+			<PatternLayout>
+				<pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n
+				</pattern>
+			</PatternLayout>
+			<Policies>
+				<TimeBasedTriggeringPolicy interval="1" modulate="true" />
+				<SizeBasedTriggeringPolicy size="10MB" />
+			</Policies>
+			<!-- Max 10 files will be created everyday -->
+			<DefaultRolloverStrategy max="5">
+				<Delete basePath="${basePath}" maxDepth="10">
+					<!-- Delete all files older than 30 days -->
+					<IfLastModified age="30d" />
+				</Delete>
+			</DefaultRolloverStrategy>
+		</RollingFile>
+		
+		<Console name="console" target="SYSTEM_OUT">
+		<PatternLayout pattern="%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1} line:%L - %m%n"/>
+		</Console>
+		
+	</Appenders>
+	
+	<Loggers>
+	<logger name="com.testCases.Log4jDemo2" level="error"
+		additivity="false">
+		<appender-ref ref="console"></appender-ref>
+	</logger>
+	<Root level="all" additivity="false">
+		<appender-ref ref="fileLogger" />
+		<appender-ref ref="console" />
+	</Root>
+</Loggers>
+</Configuration>
